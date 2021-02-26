@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: realsense_robot
+    relative_path: urdf/ur5_realsense.urdf
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/robot_description.srdf
+  CONFIG:
+    author_name: sst
+    author_email: ksst@gmail.com
+    generated_timestamp: 1614242537

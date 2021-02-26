@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/saisriteja/htic_spine_surgery_robotics/devel/include/**",
+        "/home/saisriteja/catkin_staubli/devel/include/**",
+        "/home/saisriteja/catkin_ws/devel/include/**",
+        "/opt/ros/kinetic/include/**",
+        "/home/saisriteja/catkin_ws/src/franka_active_sensing/arm_control/include/**",
+        "/home/saisriteja/catkin_ws/src/beginner_tutorials/include/**",
+        "/home/saisriteja/r2d2/src/cv_bridge_tutorial/include/**",
+        "/home/saisriteja/catkin_ws/src/ddynamic_reconfigure/include/**",
+        "/home/saisriteja/catkin_ws/src/gazebo_ros_pkgs/gazebo_plugins/include/**",
+        "/home/saisriteja/catkin_ws/src/gazebo_ros_pkgs/gazebo_ros/include/**",
+        "/home/saisriteja/catkin_ws/src/gazebo_ros_pkgs/gazebo_ros_control/include/**",
+        "/home/saisriteja/r2d2/src/r2d2_robo/include/**",
+        "/home/saisriteja/htic_spine_surgery_robotics/src/realsense-ros/realsense2_camera/include/**",
+        "/home/saisriteja/htic_spine_surgery_robotics/src/realsense_gazebo_plugin/include/**",
+        "/home/saisriteja/htic_spine_surgery_robotics/src/universal_robot/ur_kinematics/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ]
+}

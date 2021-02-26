@@ -1,0 +1,14 @@
+<robot name="robot_description" 
+  xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find ur_description)/urdf/ur5_joint_limited_robot.urdf.xacro" />
+  <!-- CAMERA -->
+
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"/>
+  <xacro:arg name="use_nominal_extrinsics" default="True" />
+
+  <sensor_d435 parent="tool0">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </sensor_d435>
+
+</robot>

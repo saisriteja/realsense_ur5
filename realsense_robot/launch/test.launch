@@ -1,0 +1,79 @@
+<launch>
+ <arg name="model" />
+
+
+<arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+
+<param name="robot_description" command="$(find xacro)/xacro '$(find ur_description)/urdf/ur5_joint_limited_robot.urdf.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
+
+<!-- push robot_description to factory and spawn robot in gazebo -->
+<node name="spawn_ur5" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
+
+<!-- Add the Intel realsense to the UR5 End Effector -->
+<param name="realsense2_camera" command="$(find xacro)/xacro  '$(find realsense_robot)/urdf/ur5_realsense.xacro' use_nominal_extrinsics:=true" />
+
+<!-- push camera to gazebo -->
+<node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-urdf -param realsense2_camera -model camera -x 1 -y 1 -z 0" respawn="false" output="screen" />
+
+
+
+ <!-- Parsing xacro and loading robot_description parameter -->
+
+ <!-- <param name="robot_description" command="$(find xacro)/xacro.py $(find realsense_robot)/urdf/ur5_realsense.xacro"/> -->
+ <!-- Setting gui parameter to true for display joint slider, for
+getting joint control -->
+ <param name="use_gui" value="true"/>
+ <!-- Starting Joint state publisher node which will publish the
+joint values -->
+ <!-- <node name="joint_state_publisher" pkg="joint_state_publisher"type="joint_state_publisher" /> -->
+ <!-- Starting robot state publish which will publish current robot
+joint states using tf -->
+ <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+ <!-- Launch visualization in rviz -->
+ <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find realsense_robot)/urdf.rviz" required="true" /> -->
+
+
+ <!-- launch the gazebo simulator and spawn the robot -->
+  <include file="$(find realsense_moveit_config)/launch/gazebo.launch" >
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gazebo_gui" value="$(arg gazebo_gui)"/>
+    <arg name="urdf_path" value="$(arg urdf_path)"/>
+  </include>
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <include file="$(find realsense_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="false"/>
+  </include>
+
+  <!-- If needed, broadcast static tf for robot root -->
+  
+
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="$(arg use_gui)"/>
+    <rosparam param="source_list">[/joint_states]</rosparam>
+  </node>
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <!-- Run the main MoveIt! executable without trajectory execution (we do not have controllers configured by default) -->
+  <include file="$(find realsense_moveit_config)/launch/move_group.launch">
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution" value="false"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>  
+
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <include file="$(find realsense_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- If database loading was enabled, start mongodb as well -->
+  <include file="$(find realsense_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)">
+    <arg name="moveit_warehouse_database_path" value="$(arg db_path)"/>
+  </include>
+
+</launch>
